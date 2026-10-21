@@ -7,6 +7,12 @@ public class Almacen {
 
     public void agregarProducto(Producto producto) {
         if (producto == null) throw new IllegalArgumentException("El producto no puede ser nulo.");
+        if (producto.getNombre() == null || producto.getNombre().trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del producto no puede ser nulo o vacio.");
+        }
+        if (Double.isNaN(producto.getPrecio()) || Double.isInfinite(producto.getPrecio()) || producto.getPrecio() <= 0) {
+            throw new IllegalArgumentException("El precio del producto debe ser un valor valido mayor que cero.");
+        }
         listaProductos.add(producto);
     }
 
@@ -24,9 +30,13 @@ public class Almacen {
     }
 
     public Producto buscarProducto(double precioBuscado) {
-        if (listaProductos.isEmpty()) return null;
-        ordenarProductos();
-        Producto[] arreglo = listaProductos.toArray(new Producto[0]);
+        if (listaProductos.isEmpty() || Double.isNaN(precioBuscado) || Double.isInfinite(precioBuscado)) {
+            return null;
+        }
+
+        Producto[] arreglo = listaProductos.stream()
+                .sorted(Comparator.comparingDouble(Producto::getPrecio))
+                .toArray(Producto[]::new);
         return busquedaBinariaRecursiva(arreglo, precioBuscado, 0, arreglo.length - 1);
     }
 

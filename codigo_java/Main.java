@@ -41,7 +41,7 @@ public class Main {
 
     private static void agregarProducto() {
         String nombre = leerTexto("Nombre del producto: ");
-        double precio = leerDouble("Precio: ");
+        double precio = leerPrecio("Precio (mayor que cero): ");
         almacen.agregarProducto(new Producto(nombre, precio));
         System.out.println("Producto agregado.");
     }
@@ -77,6 +77,17 @@ public class Main {
         double valor = sc.nextDouble();
         sc.nextLine();
         return valor;
+    }
+
+    private static double leerPrecio(String mensaje) {
+        double precio;
+        do {
+            precio = leerDouble(mensaje);
+            if (Double.isNaN(precio) || Double.isInfinite(precio) || precio <= 0) {
+                System.out.println("El precio debe ser un numero valido mayor que cero.");
+            }
+        } while (Double.isNaN(precio) || Double.isInfinite(precio) || precio <= 0);
+        return precio;
     }
 
     private static String leerTexto(String mensaje) {
